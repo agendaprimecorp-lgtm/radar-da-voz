@@ -1,7 +1,7 @@
 # Netlify Configuration for Radar da Voz
 
 [build]
-  command = "npm ci && npm run build"
+  command = "npm install && npm run build"
   functions = "api"
   publish = ".next"
 
@@ -11,7 +11,7 @@
 
 # Production environment
 [context.production]
-  command = "npm ci && npm run build"
+  command = "npm install && npm run build"
 [context.production.environment]
   NEXT_PUBLIC_SUPABASE_URL = ""
   NEXT_PUBLIC_SUPABASE_ANON_KEY = ""
