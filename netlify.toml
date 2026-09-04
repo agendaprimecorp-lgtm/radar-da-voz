@@ -1,0 +1,76 @@
+# Netlify Configuration for Radar da Voz
+
+[build]
+  command = "npm run build"
+  functions = "api"
+  publish = ".next"
+
+[dev]
+  command = "npm run dev"
+  port = 3000
+
+# Production environment
+[context.production]
+  command = "npm run build"
+  environment = { NODE_ENV = "production" }
+
+[context.production.environment]
+  NEXT_PUBLIC_SUPABASE_URL = ""
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = ""
+  SUPABASE_SERVICE_ROLE_KEY = ""
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = ""
+  STRIPE_SECRET_KEY = ""
+  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME = ""
+  CLOUDINARY_API_KEY = ""
+  CLOUDINARY_API_SECRET = ""
+  DEEPGRAM_API_KEY = ""
+  SENDGRID_API_KEY = ""
+  GOOGLE_CLOUD_PROJECT_ID = ""
+  NEXT_PUBLIC_APP_URL = ""
+
+# Deploy Preview environment
+[context.deploy-preview]
+  command = "npm run build"
+
+# Branch Deploy environment
+[context.branch-deploy]
+  command = "npm run build"
+
+# Redirects
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache control
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# API calls timeout
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Functions configuration
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["sharp"]
+
+# Retry deployment on error
+[build]
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- ."
