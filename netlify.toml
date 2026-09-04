@@ -1,7 +1,7 @@
 # Netlify Configuration for Radar da Voz
 
 [build]
-  command = "npm run build"
+  command = "npm ci && npm run build"
   functions = "api"
   publish = ".next"
 
@@ -11,17 +11,12 @@
 
 # Production environment
 [context.production]
-  command = "npm run build"
+  command = "npm ci && npm run build"
 [context.production.environment]
   NEXT_PUBLIC_SUPABASE_URL = ""
   NEXT_PUBLIC_SUPABASE_ANON_KEY = ""
   SUPABASE_SERVICE_ROLE_KEY = ""
-  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = ""
-  STRIPE_SECRET_KEY = ""
-  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME = ""
-  CLOUDINARY_API_KEY = ""
-  CLOUDINARY_API_SECRET = ""
-  DEEPGRAM_API_KEY = ""
+  NEXT_PUBLIC_STRIPE_PUBLISnpm ci && npm run buildI_KEY = ""
   SENDGRID_API_KEY = ""
   GOOGLE_CLOUD_PROJECT_ID = ""
   NEXT_PUBLIC_APP_URL = ""
