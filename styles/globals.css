@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 * {
-  @apply border-border;
+  @apply border-dark-700;
 }
 
 body {
