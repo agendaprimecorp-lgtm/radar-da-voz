@@ -71,9 +71,8 @@ async function sendByChannel(
       return await sendSMSNotification(userId, subject, content)
     }
   } catch (error: any) {
-    logError('ChannelNotificationError', error.message, error.stack, {
+    logError('ChannelNotificationError', `Channel: ${channel} - ${error.message}`, error.stack, {
       userId,
-      channel,
     })
   }
 }

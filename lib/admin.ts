@@ -72,7 +72,12 @@ export async function grantAdminPermission(
     if (error) throw new Error(error.message)
 
     // Log ação
-    await logAdminAction('permission_granted', userId, { permission })
+    await logAdminAction('permission_granted', userId, {
+      target_id: userId,
+      target_type: 'user',
+      description: `Permission granted: ${permission}`,
+      changes: { permission },
+    })
 
     return data
   } catch (error: any) {

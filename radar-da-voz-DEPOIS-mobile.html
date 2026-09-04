@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar da Voz - DEPOIS (Mobile)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --dark-secondary: #1e293b;
+            --light: #f1f5f9;
+            --border: #cbd5e1;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .success-banner {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            padding: 12px 16px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .header {
+            background: var(--dark-secondary);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(203, 213, 225, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-title svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--light);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 4px;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -256px;
+            top: 56px;
+            width: 256px;
+            height: calc(100vh - 56px - 64px);
+            background: var(--dark-secondary);
+            padding: 20px;
+            border-right: 1px solid rgba(203, 213, 225, 0.1);
+            overflow-y: auto;
+            z-index: 100;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 56px);
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 99;
+        }
+
+        .sidebar-overlay.open {
+            display: block;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: rgba(241, 245, 249, 0.7);
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .nav-link:active {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+        }
+
+        .container {
+            padding-bottom: 64px;
+            padding-top: 56px;
+        }
+
+        .main-content {
+            padding: 16px;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        p {
+            font-size: 14px;
+            color: rgba(241, 245, 249, 0.8);
+            margin-bottom: 12px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+
+        .btn-secondary {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:active {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--dark-secondary);
+            border: 1px solid rgba(203, 213, 225, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .card:active {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--light);
+        }
+
+        .card-description {
+            font-size: 13px;
+            color: rgba(241, 245, 249, 0.7);
+            margin-bottom: 12px;
+        }
+
+        .card-footer {
+            display: flex;
+            gap: 8px;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(203, 213, 225, 0.1);
+            flex-wrap: wrap;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--light);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(203, 213, 225, 0.05);
+            color: var(--light);
+            border: 2px solid rgba(203, 213, 225, 0.2);
+            font-size: 14px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: rgba(241, 245, 249, 0.5);
+        }
+
+        .form-container {
+            background: var(--dark-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(203, 213, 225, 0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .grid-item {
+            background: var(--dark-secondary);
+            border: 1px solid rgba(203, 213, 225, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .grid-item-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            display: inline-flex;
+        }
+
+        .grid-item-icon svg {
+            width: 32px;
+            height: 32px;
+            color: var(--primary);
+        }
+
+        .grid-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--light);
+        }
+
+        .grid-item-text {
+            font-size: 12px;
+            color: rgba(241, 245, 249, 0.7);
+        }
+
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .pricing-card {
+            background: var(--dark-secondary);
+            border: 2px solid rgba(203, 213, 225, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -10px;
+            left: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .pricing-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--light);
+            margin-top: 8px;
+        }
+
+        .pricing-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .pricing-period {
+            font-size: 12px;
+            color: rgba(241, 245, 249, 0.7);
+            margin-bottom: 16px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 16px 0;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(203, 213, 225, 0.1);
+            font-size: 12px;
+            color: rgba(241, 245, 249, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-features li:before {
+            content: "✓";
+            color: var(--success);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .pricing-cta {
+            margin-top: 16px;
+        }
+
+        /* Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-card {
+            background: var(--dark-secondary);
+            border: 1px solid rgba(203, 213, 225, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:active {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .dashboard-card-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .dashboard-card-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .dashboard-card-label {
+            font-size: 11px;
+            color: rgba(241, 245, 249, 0.7);
+            margin-bottom: 6px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .dashboard-card-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--light);
+        }
+
+        .dashboard-card-change {
+            font-size: 11px;
+            color: var(--success);
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        /* Table */
+        .table {
+            width: 100%;
+            background: var(--dark-secondary);
+            border-collapse: collapse;
+            border: 1px solid rgba(203, 213, 225, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .table th {
+            background: rgba(99, 102, 241, 0.1);
+            padding: 12px;
+            text-align: left;
+            color: var(--light);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        .table td {
+            padding: 12px;
+            border-top: 1px solid rgba(203, 213, 225, 0.1);
+            color: rgba(241, 245, 249, 0.9);
+        }
+
+        .table tr:active {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 28px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .feature-box {
+            background: var(--dark-secondary);
+            border: 1px solid rgba(203, 213, 225, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:active {
+            border-color: var(--secondary);
+        }
+
+        .feature-box-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            color: var(--secondary);
+        }
+
+        .feature-box-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .feature-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .feature-box p {
+            font-size: 13px;
+            color: rgba(241, 245, 249, 0.7);
+            margin-bottom: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-secondary);
+            padding: 16px;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(241, 245, 249, 0.7);
+            border-top: 1px solid rgba(203, 213, 225, 0.1);
+            margin-top: 24px;
+            margin-bottom: 64px;
+        }
+
+        /* Link */
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        a:active {
+            color: var(--secondary);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--dark-secondary);
+            border-top: 1px solid rgba(203, 213, 225, 0.1);
+            display: flex;
+            justify-content: space-around;
+            height: 64px;
+            padding: 8px 0;
+            z-index: 101;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-item-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+            color: rgba(241, 245, 249, 0.6);
+            flex: 1;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            padding: 4px 0;
+        }
+
+        .nav-item-bottom:active {
+            color: var(--primary);
+        }
+
+        .nav-item-bottom-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-item-bottom-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-banner">✅ VERSÃO REDESENHADA - Aplicando recomendações</div>
+
+    <!-- Header -->
+    <div class="header">
+        <span class="header-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+            </svg>
+            Radar Voz
+        </span>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="toggleMenu()"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <ul class="nav-menu">
+            <li class="nav-item"><a class="nav-link" onclick="showPageMobile('landing')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Landing
+            </a></li>
+            <li class="nav-item"><a class="nav-link" onclick="showPageMobile('login')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                Acesso
+            </a></li>
+            <li class="nav-item"><a class="nav-link" onclick="showPageMobile('dashboard')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                Dashboard
+            </a></li>
+            <li class="nav-item"><a class="nav-link" onclick="showPageMobile('talentos')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                Talentos
+            </a></li>
+            <li class="nav-item"><a class="nav-link" onclick="showPageMobile('vagas')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 11h.01"></path>
+                    <path d="M8 11h.01"></path>
+                </svg>
+                Vagas
+            </a></li>
+            <li class="nav-item"><a class="nav-link" onclick="showPageMobile('pricing')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+                Planos
+            </a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Landing Page -->
+        <div id="landing" class="page active">
+            <div class="main-content">
+                <div class="hero">
+                    <div class="hero-content">
+                        <h1>Radar da Voz</h1>
+                        <p>Gestão de riscos psicossociais para empresas modernas</p>
+                        <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px;">
+                            Começar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Recursos</h2>
+                    <div class="features">
+                        <div class="feature-box">
+                            <div class="feature-box-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <h3>Gerenciar Talentos</h3>
+                            <p>Acompanhe desenvolvimento da equipe</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-box-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                </svg>
+                            </div>
+                            <h3>Publicar Vagas</h3>
+                            <p>Encontre os melhores candidatos</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-box-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </div>
+                            <h3>Análise de Riscos</h3>
+                            <p>Dados em tempo real e insights</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Por Que Escolher?</h2>
+                    <div class="grid">
+                        <div class="grid-item">
+                            <div class="grid-item-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                </svg>
+                            </div>
+                            <div class="grid-item-title">Segurança</div>
+                            <div class="grid-item-text">Dados protegidos com criptografia</div>
+                        </div>
+                        <div class="grid-item">
+                            <div class="grid-item-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                    <polyline points="17 6 23 6 23 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="grid-item-title">Rápido</div>
+                            <div class="grid-item-text">Setup em minutos</div>
+                        </div>
+                        <div class="grid-item">
+                            <div class="grid-item-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                                </svg>
+                            </div>
+                            <div class="grid-item-title">Efetivo</div>
+                            <div class="grid-item-text">Resultados comprovados</div>
+                        </div>
+                    </div>
+                </div>
+
+                <footer>© 2026 Radar da Voz. Todos os direitos reservados.</footer>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="login" class="page">
+            <div class="main-content">
+                <h2>Bem-vindo</h2>
+                <p>Acesse sua conta para continuar</p>
+
+                <div class="form-container">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="seu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-input" placeholder="••••••••">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; justify-content: center;">Entrar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page">
+            <div class="main-content">
+                <h2>Dashboard</h2>
+                <p>Visão geral em tempo real</p>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="dashboard-card-label">Usuários</div>
+                        <div class="dashboard-card-value">1.2K</div>
+                        <div class="dashboard-card-change">+12%</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                        </div>
+                        <div class="dashboard-card-label">Vagas</div>
+                        <div class="dashboard-card-value">42</div>
+                        <div class="dashboard-card-change">+8 semana</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="2" x2="12" y2="22"></line>
+                            </svg>
+                        </div>
+                        <div class="dashboard-card-label">Engajamento</div>
+                        <div class="dashboard-card-value">78%</div>
+                        <div class="dashboard-card-change">+5%</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="1"></circle>
+                            </svg>
+                        </div>
+                        <div class="dashboard-card-label">Riscos</div>
+                        <div class="dashboard-card-value">12</div>
+                        <div class="dashboard-card-change">-3 semana</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Atividade</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Usuário</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>João Silva</td>
+                                <td><span class="badge badge-success">Novo</span></td>
+                            </tr>
+                            <tr>
+                                <td>Maria S.</td>
+                                <td><span class="badge badge-success">OK</span></td>
+                            </tr>
+                            <tr>
+                                <td>Pedro C.</td>
+                                <td><span class="badge">Enviado</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Talentos Page -->
+        <div id="talentos" class="page">
+            <div class="main-content">
+                <h2>Talentos</h2>
+                <p>Gerenciar sua equipe</p>
+
+                <div class="card">
+                    <div class="card-title">João Silva</div>
+                    <div class="card-description">Dev Full Stack | SP</div>
+                    <div class="card-footer">
+                        <span class="badge badge-success">Ativo</span>
+                        <button class="btn btn-secondary btn-small">Perfil</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Maria Santos</div>
+                    <div class="card-description">Gerente | RJ</div>
+                    <div class="card-footer">
+                        <span class="badge badge-success">Ativo</span>
+                        <button class="btn btn-secondary btn-small">Perfil</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Pedro Costa</div>
+                    <div class="card-description">Designer | BSB</div>
+                    <div class="card-footer">
+                        <span class="badge badge-success">Ativo</span>
+                        <button class="btn btn-secondary btn-small">Perfil</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Ana Oliveira</div>
+                    <div class="card-description">DevOps | Curitiba</div>
+                    <div class="card-footer">
+                        <span class="badge badge-warning">Inativo</span>
+                        <button class="btn btn-secondary btn-small">Perfil</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vagas Page -->
+        <div id="vagas" class="page">
+            <div class="main-content">
+                <h2>Vagas</h2>
+                <p>Oportunidades abertas</p>
+
+                <div class="card">
+                    <div class="card-title">Dev Python Senior</div>
+                    <div class="card-description">SP | R$ 12k-15k</div>
+                    <div class="card-footer">
+                        <span class="badge">8 candidatos</span>
+                        <button class="btn btn-primary btn-small">Ver</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Analista RH</div>
+                    <div class="card-description">RJ | R$ 6k-8k</div>
+                    <div class="card-footer">
+                        <span class="badge">15 candidatos</span>
+                        <button class="btn btn-primary btn-small">Ver</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Designer Gráfico</div>
+                    <div class="card-description">Remoto | R$ 4k-6k</div>
+                    <div class="card-footer">
+                        <span class="badge">23 candidatos</span>
+                        <button class="btn btn-primary btn-small">Ver</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing Page -->
+        <div id="pricing" class="page">
+            <div class="main-content">
+                <h2>Planos</h2>
+                <p>Escolha seu plano ideal</p>
+
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="pricing-title">Starter</div>
+                        <div class="pricing-value">R$ 99</div>
+                        <div class="pricing-period">por mês</div>
+                        <ul class="pricing-features">
+                            <li>Até 50 usuários</li>
+                            <li>Relatórios básicos</li>
+                            <li>Suporte por email</li>
+                        </ul>
+                        <div class="pricing-cta">
+                            <button class="btn btn-secondary" style="width: 100%; justify-content: center;">Começar</button>
+                        </div>
+                    </div>
+
+                    <div class="pricing-card featured">
+                        <div class="pricing-badge">Popular</div>
+                        <div class="pricing-title">Professional</div>
+                        <div class="pricing-value">R$ 299</div>
+                        <div class="pricing-period">por mês</div>
+                        <ul class="pricing-features">
+                            <li>Até 500 usuários</li>
+                            <li>Relatórios avançados</li>
+                            <li>Suporte prioritário</li>
+                        </ul>
+                        <div class="pricing-cta">
+                            <button class="btn btn-primary" style="width: 100%; justify-content: center;">Começar</button>
+                        </div>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-title">Enterprise</div>
+                        <div class="pricing-value">Custom</div>
+                        <div class="pricing-period">Consulte-nos</div>
+                        <ul class="pricing-features">
+                            <li>Usuários ilimitados</li>
+                            <li>API completa</li>
+                            <li>Suporte 24/7</li>
+                        </ul>
+                        <div class="pricing-cta">
+                            <button class="btn btn-secondary" style="width: 100%; justify-content: center;">Falar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a class="nav-item-bottom" onclick="showPageMobile('landing')">
+            <div class="nav-item-bottom-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                </svg>
+            </div>
+            <div>Home</div>
+        </a>
+        <a class="nav-item-bottom" onclick="showPageMobile('talentos')">
+            <div class="nav-item-bottom-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <div>Talentos</div>
+        </a>
+        <a class="nav-item-bottom" onclick="showPageMobile('vagas')">
+            <div class="nav-item-bottom-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                </svg>
+            </div>
+            <div>Vagas</div>
+        </a>
+        <a class="nav-item-bottom" onclick="showPageMobile('dashboard')">
+            <div class="nav-item-bottom-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                </svg>
+            </div>
+            <div>Dashboard</div>
+        </a>
+    </nav>
+
+    <script>
+        function toggleMenu() {
+            document.querySelector('.sidebar').classList.toggle('open');
+            document.querySelector('.sidebar-overlay').classList.toggle('open');
+        }
+
+        function showPageMobile(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            document.getElementById(pageId).classList.add('active');
+
+            document.querySelector('.sidebar').classList.remove('open');
+            document.querySelector('.sidebar-overlay').classList.remove('open');
+        }
+    </script>
+</body>
+</html>

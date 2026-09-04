@@ -75,7 +75,7 @@ export function ReviewCard({
       <div className="flex gap-2 text-xs">
         <Button
           onClick={() => handleVote(true)}
-          variant={voted === true ? 'default' : 'outline'}
+          variant={voted === true ? 'primary' : 'outline'}
           size="sm"
           className="text-xs"
         >

@@ -68,14 +68,14 @@ export default function PricingPage() {
           <div className="flex justify-center gap-4 mb-12">
             <Button
               onClick={() => setSelectedBilling('monthly')}
-              variant={selectedBilling === 'monthly' ? 'default' : 'outline'}
+              variant={selectedBilling === 'monthly' ? 'primary' : 'outline'}
               className={selectedBilling === 'monthly' ? 'bg-primary-500' : ''}
             >
               📅 Mensal
             </Button>
             <Button
               onClick={() => setSelectedBilling('annual')}
-              variant={selectedBilling === 'annual' ? 'default' : 'outline'}
+              variant={selectedBilling === 'annual' ? 'primary' : 'outline'}
               className={selectedBilling === 'annual' ? 'bg-primary-500' : ''}
             >
               ✨ Anual (economize 15%)

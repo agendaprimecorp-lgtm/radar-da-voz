@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Loader } from '@googlemaps/js-api-loader'
 
 interface MapMarker {
   id: string
@@ -36,13 +35,9 @@ export function InteractiveMap({
     const initMap = async () => {
       if (!mapRef.current || !process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY) return
 
-      const loader = new Loader({
-        apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY,
-        version: 'weekly',
-      })
-
-      const { Map } = await loader.importLibrary('maps')
-      const { AdvancedMarkerElement } = await loader.importLibrary('marker')
+      // Load Google Maps libraries
+      const { Map } = await google.maps.importLibrary('maps') as any
+      const { AdvancedMarkerElement } = await google.maps.importLibrary('marker') as any
 
       const mapInstance = new Map(mapRef.current, {
         zoom,
@@ -106,7 +101,7 @@ export function InteractiveMap({
       newMarkers.forEach((marker) => {
         bounds.extend(marker.getPosition()!)
       })
-      map.fitBounds(bounds, { padding: 100 })
+      map.fitBounds(bounds, { top: 100, bottom: 100, left: 100, right: 100 } as any)
     }
   }, [markers, map])
 

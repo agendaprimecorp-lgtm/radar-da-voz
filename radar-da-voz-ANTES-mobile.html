@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar da Voz - ANTES (Mobile)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #1F2937;
+            color: #e5e7eb;
+            min-height: 100vh;
+        }
+
+        .warning-banner {
+            background: #ef4444;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .header {
+            background: #111827;
+            padding: 12px;
+            border-bottom: 1px solid #374151;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #9fd700;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: #9fd700;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .container {
+            padding-bottom: 80px;
+            padding-left: 0;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -256px;
+            top: 36px;
+            width: 256px;
+            height: calc(100vh - 36px - 80px);
+            background: #111827;
+            padding: 20px;
+            border-right: 1px solid #374151;
+            overflow-y: auto;
+            z-index: 100;
+            transition: left 0.3s;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 36px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 36px);
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 99;
+        }
+
+        .sidebar-overlay.open {
+            display: block;
+        }
+
+        .sidebar-logo {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #9fd700;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 8px;
+            color: #9ca3af;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 12px;
+            border-radius: 2px;
+            transition: none;
+        }
+
+        .nav-link:active {
+            background: #9fd700;
+            color: #111827;
+        }
+
+        .main-content {
+            padding: 16px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Landing Page */
+        .landing-hero {
+            background: #111827;
+            padding: 16px;
+            border-radius: 2px;
+            margin-bottom: 16px;
+        }
+
+        .landing-hero h1 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #9fd700;
+        }
+
+        .landing-hero p {
+            color: #9ca3af;
+            margin-bottom: 12px;
+            font-size: 12px;
+        }
+
+        .btn {
+            padding: 4px 8px;
+            background: #9fd700;
+            color: #111827;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 2px;
+            transition: none;
+        }
+
+        .btn:active {
+            background: #7cc200;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .feature-box {
+            background: #111827;
+            padding: 12px;
+            border-radius: 2px;
+            border: none;
+        }
+
+        .feature-box h3 {
+            font-size: 12px;
+            color: #9fd700;
+            margin-bottom: 4px;
+        }
+
+        .feature-box p {
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        /* Cards */
+        .card {
+            background: #111827;
+            padding: 12px;
+            border-radius: 2px;
+            border: 1px solid #374151;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #e5e7eb;
+            margin-bottom: 4px;
+        }
+
+        .card-description {
+            font-size: 10px;
+            color: #9ca3af;
+            margin-bottom: 6px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #9fd700;
+            color: #111827;
+            padding: 2px 4px;
+            font-size: 9px;
+            border-radius: 1px;
+            margin-right: 3px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 3px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 4px 6px;
+            background: #374151;
+            color: #e5e7eb;
+            border: 1px solid #4b5563;
+            font-size: 11px;
+            border-radius: 2px;
+        }
+
+        .form-container {
+            background: #111827;
+            padding: 16px;
+            border-radius: 2px;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .grid-item {
+            background: #111827;
+            padding: 12px;
+            border-radius: 2px;
+            border: 1px solid #374151;
+        }
+
+        .grid-item-icon {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+        .grid-item-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: #e5e7eb;
+            margin-bottom: 2px;
+        }
+
+        .grid-item-text {
+            font-size: 9px;
+            color: #9ca3af;
+        }
+
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .pricing-card {
+            background: #111827;
+            padding: 12px;
+            border-radius: 2px;
+            border: 1px solid #374151;
+        }
+
+        .pricing-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #e5e7eb;
+            margin-bottom: 4px;
+        }
+
+        .pricing-value {
+            font-size: 16px;
+            color: #9fd700;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .pricing-feature {
+            font-size: 9px;
+            color: #9ca3af;
+            margin-bottom: 2px;
+        }
+
+        /* Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .dashboard-card {
+            background: #111827;
+            padding: 12px;
+            border-radius: 2px;
+            border: 1px solid #374151;
+            text-align: center;
+        }
+
+        .dashboard-card-icon {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .dashboard-card-label {
+            font-size: 9px;
+            color: #9ca3af;
+            margin-bottom: 3px;
+        }
+
+        .dashboard-card-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #9fd700;
+        }
+
+        .table {
+            width: 100%;
+            background: #111827;
+            border-collapse: collapse;
+            border: 1px solid #374151;
+            font-size: 10px;
+            margin-bottom: 16px;
+        }
+
+        .table th {
+            background: #374151;
+            padding: 6px;
+            text-align: left;
+            color: #e5e7eb;
+            font-weight: bold;
+        }
+
+        .table td {
+            padding: 6px;
+            border-top: 1px solid #374151;
+            color: #9ca3af;
+        }
+
+        h2 {
+            font-size: 14px;
+            color: #e5e7eb;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 12px;
+            color: #e5e7eb;
+            margin-bottom: 8px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #111827;
+            border-top: 1px solid #374151;
+            display: flex;
+            justify-content: space-around;
+            height: 80px;
+            padding: 8px 0;
+            z-index: 101;
+        }
+
+        .nav-item-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 11px;
+            color: #9ca3af;
+            flex: 1;
+            text-decoration: none;
+        }
+
+        .nav-item-bottom:active {
+            color: #9fd700;
+        }
+
+        .nav-item-bottom-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        footer {
+            background: #111827;
+            padding: 12px;
+            text-align: center;
+            font-size: 9px;
+            color: #9ca3af;
+            border-top: 1px solid #374151;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="warning-banner">⚠️ VERSÃO ATUAL - Com problemas</div>
+
+    <!-- Header -->
+    <div class="header">
+        <span class="header-title">Radar Voz</span>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="toggleMenu()"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">🎯 Menu</div>
+        <ul class="nav-menu">
+            <li class="nav-item"><a class="nav-link" onclick="showPageMobile('landing')">Landing</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="showPageMobile('login')">Login</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="showPageMobile('dashboard')">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="showPageMobile('talentos')">Talentos</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="showPageMobile('vagas')">Vagas</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="showPageMobile('pricing')">Pricing</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Landing Page -->
+        <div id="landing" class="page active">
+            <div class="main-content">
+                <div class="landing-hero">
+                    <h1>Radar da Voz 🎯</h1>
+                    <p>Gestão de riscos psicossociais</p>
+                    <button class="btn">Começar Agora</button>
+                </div>
+
+                <h2>Recursos</h2>
+                <div class="features">
+                    <div class="feature-box">
+                        <h3>👤 Talentos</h3>
+                        <p>Gerenciar equipes</p>
+                    </div>
+                    <div class="feature-box">
+                        <h3>💼 Vagas</h3>
+                        <p>Publicar oportunidades</p>
+                    </div>
+                    <div class="feature-box">
+                        <h3>📊 Análise</h3>
+                        <p>Dados em tempo real</p>
+                    </div>
+                </div>
+
+                <h2>Por Que?</h2>
+                <div class="grid">
+                    <div class="grid-item">
+                        <div class="grid-item-icon">🔒</div>
+                        <div class="grid-item-title">Seguro</div>
+                        <div class="grid-item-text">Dados protegidos</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="grid-item-icon">⚡</div>
+                        <div class="grid-item-title">Rápido</div>
+                        <div class="grid-item-text">Implementação ágil</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="grid-item-icon">📈</div>
+                        <div class="grid-item-title">Efetivo</div>
+                        <div class="grid-item-text">Resultados comprovados</div>
+                    </div>
+                </div>
+
+                <footer>© 2026 Radar da Voz</footer>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="login" class="page">
+            <div class="main-content">
+                <h2>Entrar 🔑</h2>
+                <div class="form-container">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="seu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-input" placeholder="••••••••">
+                    </div>
+                    <button class="btn" style="width: 100%; padding: 6px;">Entrar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page">
+            <div class="main-content">
+                <h2>Dashboard 📊</h2>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">👥</div>
+                        <div class="dashboard-card-label">Usuários</div>
+                        <div class="dashboard-card-value">1,234</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">💼</div>
+                        <div class="dashboard-card-label">Vagas</div>
+                        <div class="dashboard-card-value">42</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">📊</div>
+                        <div class="dashboard-card-label">Engajamento</div>
+                        <div class="dashboard-card-value">78%</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">⚠️</div>
+                        <div class="dashboard-card-label">Riscos</div>
+                        <div class="dashboard-card-value">12</div>
+                    </div>
+                </div>
+
+                <h3>Atividade</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>João</td>
+                            <td>Candidato</td>
+                        </tr>
+                        <tr>
+                            <td>Maria</td>
+                            <td>Questionário</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Talentos Page -->
+        <div id="talentos" class="page">
+            <div class="main-content">
+                <h2>Talentos 👥</h2>
+
+                <div class="card">
+                    <div class="card-title">João Silva</div>
+                    <div class="card-description">Dev Full Stack | SP</div>
+                    <span class="badge">Ativo</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Maria Santos</div>
+                    <div class="card-description">Gerente | RJ</div>
+                    <span class="badge">Ativo</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Pedro Costa</div>
+                    <div class="card-description">Designer | BSB</div>
+                    <span class="badge">Ativo</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vagas Page -->
+        <div id="vagas" class="page">
+            <div class="main-content">
+                <h2>Vagas 💼</h2>
+
+                <div class="card">
+                    <div class="card-title">Dev Python</div>
+                    <div class="card-description">SP | R$ 12k-15k</div>
+                    <button class="btn">Ver</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Analista RH</div>
+                    <div class="card-description">RJ | R$ 6k-8k</div>
+                    <button class="btn">Ver</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Designer</div>
+                    <div class="card-description">Remoto | R$ 4k-6k</div>
+                    <button class="btn">Ver</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing Page -->
+        <div id="pricing" class="page">
+            <div class="main-content">
+                <h2>Planos 💰</h2>
+
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="pricing-title">Starter</div>
+                        <div class="pricing-value">R$ 99</div>
+                        <div class="pricing-feature">por mês</div>
+                        <button class="btn" style="width: 100%; margin-top: 8px;">Começar</button>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-title">Professional</div>
+                        <div class="pricing-value">R$ 299</div>
+                        <div class="pricing-feature">por mês</div>
+                        <button class="btn" style="width: 100%; margin-top: 8px;">Começar</button>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-title">Enterprise</div>
+                        <div class="pricing-value">Custom</div>
+                        <div class="pricing-feature">Consulte</div>
+                        <button class="btn" style="width: 100%; margin-top: 8px;">Falar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a class="nav-item-bottom" onclick="showPageMobile('landing')">
+            <div class="nav-item-bottom-icon">🏠</div>
+            <div>Home</div>
+        </a>
+        <a class="nav-item-bottom" onclick="showPageMobile('talentos')">
+            <div class="nav-item-bottom-icon">👥</div>
+            <div>Talentos</div>
+        </a>
+        <a class="nav-item-bottom" onclick="showPageMobile('vagas')">
+            <div class="nav-item-bottom-icon">💼</div>
+            <div>Vagas</div>
+        </a>
+        <a class="nav-item-bottom" onclick="showPageMobile('dashboard')">
+            <div class="nav-item-bottom-icon">📊</div>
+            <div>Dashboard</div>
+        </a>
+    </nav>
+
+    <script>
+        function toggleMenu() {
+            document.querySelector('.sidebar').classList.toggle('open');
+            document.querySelector('.sidebar-overlay').classList.toggle('open');
+        }
+
+        function showPageMobile(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+
+            // Close menu if open
+            document.querySelector('.sidebar').classList.remove('open');
+            document.querySelector('.sidebar-overlay').classList.remove('open');
+        }
+    </script>
+</body>
+</html>

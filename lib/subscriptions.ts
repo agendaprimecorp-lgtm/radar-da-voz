@@ -7,7 +7,7 @@ const supabase = createClient(
 )
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2023-10-16',
+  apiVersion: '2023-08-16',
 })
 
 export type SubscriptionPlan = 'free' | 'pro' | 'enterprise'
@@ -109,7 +109,7 @@ export async function createSubscription(
   const stripeSubscription = await stripe.subscriptions.create({
     customer: customerId,
     items: [{ price: priceId }],
-    trial_period_days: plan.trial_days,
+    trial_period_days: 14, // Padrão de trial de 14 dias
     payment_behavior: 'default_incomplete',
     payment_settings: {
       save_default_payment_method: 'on_subscription',
@@ -122,7 +122,7 @@ export async function createSubscription(
     .insert({
       user_id: userId,
       plan_id: plan.id,
-      status: plan.trial_days > 0 ? 'trialing' : 'active',
+      status: 'trialing', // Padrão com trial de 14 dias
       stripe_subscription_id: stripeSubscription.id,
       stripe_customer_id: customerId,
       current_period_start: new Date(stripeSubscription.current_period_start * 1000),
@@ -142,11 +142,11 @@ export async function createSubscription(
 // Cancelar subscription
 export async function cancelSubscription(userId: string) {
   // 1. Obter subscription
-  const subscription = await getUserSubscription(userId)
+  const subscription = await getUserSubscription(userId) as any
   if (!subscription) throw new Error('Nenhuma subscription encontrada')
 
   // 2. Cancelar no Stripe
-  await stripe.subscriptions.del(subscription.stripe_subscription_id)
+  await stripe.subscriptions.cancel(subscription.stripe_subscription_id)
 
   // 3. Atualizar no banco
   const { data, error } = await supabase
@@ -178,8 +178,8 @@ export async function upgradeSubscription(
   const newSubscription = await createSubscription(userId, newPlanType, billingCycle)
 
   // 3. Cancelar a antiga no Stripe
-  if (currentSubscription.stripe_subscription_id) {
-    await stripe.subscriptions.del(currentSubscription.stripe_subscription_id)
+  if ((currentSubscription as any).stripe_subscription_id) {
+    await stripe.subscriptions.cancel((currentSubscription as any).stripe_subscription_id)
   }
 
   return newSubscription

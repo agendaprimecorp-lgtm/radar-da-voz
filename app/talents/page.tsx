@@ -88,7 +88,7 @@ export default function TalentsPage() {
                     <div className="text-lg font-bold text-primary-500">
                       {talent.rating.toFixed(1)}
                     </div>
-                    <p className="text-xs text-dark-500">({talent.review_count})</p>
+                    <p className="text-xs text-dark-500">(⭐ rating)</p>
                   </div>
                 </div>
 

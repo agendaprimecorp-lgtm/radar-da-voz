@@ -45,3 +45,30 @@ export function createAuthResponse(status: number, data: any) {
 
   return response
 }
+
+export function getCurrentUserId(request: NextRequest): string | null {
+  const authHeader = request.headers.get('authorization')
+  const token = authHeader?.split('Bearer ')[1]
+
+  if (!token) {
+    return null
+  }
+
+  try {
+    // Decodificar o token JWT (formato: header.payload.signature)
+    const parts = token.split('.')
+    if (parts.length !== 3) {
+      return null
+    }
+
+    // Decodificar o payload (segunda parte)
+    const payload = JSON.parse(
+      Buffer.from(parts[1], 'base64').toString('utf-8')
+    )
+
+    // Retornar o sub (subject) que é o ID do usuário
+    return payload.sub || null
+  } catch (error) {
+    return null
+  }
+}

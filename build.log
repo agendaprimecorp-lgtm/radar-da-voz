@@ -1,0 +1,77 @@
+
+> radar-da-voz@1.0.0 build
+> next build
+
+   ▲ Next.js 14.0.0
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings
+
+./app/api/admin/dashboard/route.ts
+Attempted import error: 'getCurrentUserId' is not exported from '@/app/api/auth/protected/route' (imported as 'getCurrentUserId').
+
+Import trace for requested module:
+./app/api/admin/dashboard/route.ts
+
+./app/api/contracts/[id]/sign/route.ts
+Attempted import error: 'getCurrentUserId' is not exported from '@/app/api/auth/protected/route' (imported as 'getCurrentUserId').
+
+Import trace for requested module:
+./app/api/contracts/[id]/sign/route.ts
+
+./app/api/contracts/route.ts
+Attempted import error: 'getCurrentUserId' is not exported from '@/app/api/auth/protected/route' (imported as 'getCurrentUserId').
+
+Import trace for requested module:
+./app/api/contracts/route.ts
+
+./app/api/contracts/route.ts
+Attempted import error: 'getCurrentUserId' is not exported from '@/app/api/auth/protected/route' (imported as 'getCurrentUserId').
+
+Import trace for requested module:
+./app/api/contracts/route.ts
+
+./app/api/local-representation/offices/route.ts
+Attempted import error: 'getCurrentUserId' is not exported from '@/app/api/auth/protected/route' (imported as 'getCurrentUserId').
+
+Import trace for requested module:
+./app/api/local-representation/offices/route.ts
+
+./app/api/local-representation/offices/route.ts
+Attempted import error: 'getCurrentUserId' is not exported from '@/app/api/auth/protected/route' (imported as 'getCurrentUserId').
+
+Import trace for requested module:
+./app/api/local-representation/offices/route.ts
+
+./app/api/notifications/preferences/route.ts
+Attempted import error: 'getCurrentUserId' is not exported from '@/app/api/auth/protected/route' (imported as 'getCurrentUserId').
+
+Import trace for requested module:
+./app/api/notifications/preferences/route.ts
+
+./app/api/notifications/preferences/route.ts
+Attempted import error: 'getCurrentUserId' is not exported from '@/app/api/auth/protected/route' (imported as 'getCurrentUserId').
+
+Import trace for requested module:
+./app/api/notifications/preferences/route.ts
+
+./app/api/notifications/send/route.ts
+Attempted import error: 'getCurrentUserId' is not exported from '@/app/api/auth/protected/route' (imported as 'getCurrentUserId').
+
+Import trace for requested module:
+./app/api/notifications/send/route.ts
+
+   Linting and checking validity of types ...
+Failed to compile.
+
+./app/api/admin/dashboard/route.ts:3:30
+Type error: Module '"@/app/api/auth/protected/route"' has no exported member 'getCurrentUserId'.
+
+[0m [90m 1 |[39m [36mimport[39m { [33mNextRequest[39m[33m,[39m [33mNextResponse[39m } [36mfrom[39m [32m'next/server'[39m[0m
+[0m [90m 2 |[39m [36mimport[39m { getSystemStats[33m,[39m getAdminActionLogs[33m,[39m getAdminPermissions } [36mfrom[39m [32m'@/lib/admin'[39m[0m
+[0m[31m[1m>[22m[39m[90m 3 |[39m [36mimport[39m { createAuthResponse[33m,[39m getCurrentUserId } [36mfrom[39m [32m'@/app/api/auth/protected/route'[39m[0m
+[0m [90m   |[39m                              [31m[1m^[22m[39m[0m
+[0m [90m 4 |[39m[0m
+[0m [90m 5 |[39m [36mexport[39m [36masync[39m [36mfunction[39m [33mGET[39m(request[33m:[39m [33mNextRequest[39m) {[0m
+[0m [90m 6 |[39m   [36mtry[39m {[0m

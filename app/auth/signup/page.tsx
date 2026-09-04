@@ -47,10 +47,12 @@ export default function SignUpPage() {
       await signUp(
         formData.email,
         formData.password,
-        formData.name,
-        formData.userType,
-        formData.city,
-        formData.state
+        {
+          name: formData.name,
+          userType: formData.userType,
+          city: formData.city,
+          state: formData.state,
+        }
       )
 
       toast.success('Conta criada! Verifique seu email.')

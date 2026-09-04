@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar da Voz - ANTES (Desktop)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #1F2937;
+            color: #e5e7eb;
+            min-height: 100vh;
+        }
+
+        .warning-banner {
+            background: #ef4444;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 36px);
+        }
+
+        .sidebar {
+            width: 256px;
+            background: #111827;
+            padding: 20px;
+            border-right: 1px solid #374151;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #9fd700;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 6px 8px;
+            color: #9ca3af;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 13px;
+            border-radius: 2px;
+            transition: none;
+        }
+
+        .nav-link:hover {
+            background: rgba(159, 215, 0, 0.1);
+            color: #9fd700;
+        }
+
+        .nav-link.active {
+            background: #9fd700;
+            color: #111827;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Landing Page */
+        .landing-hero {
+            background: linear-gradient(135deg, #1F2937 0%, #111827 100%);
+            padding: 40px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .landing-hero h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #9fd700;
+        }
+
+        .landing-hero p {
+            color: #9ca3af;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .btn {
+            padding: 4px 8px;
+            background: #9fd700;
+            color: #111827;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            border-radius: 2px;
+            transition: none;
+        }
+
+        .btn:hover {
+            background: #7cc200;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .feature-box {
+            background: #111827;
+            padding: 12px;
+            border-radius: 2px;
+            border: none;
+        }
+
+        .feature-box h3 {
+            font-size: 13px;
+            color: #9fd700;
+            margin-bottom: 4px;
+        }
+
+        .feature-box p {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        /* Cards */
+        .card {
+            background: #111827;
+            padding: 12px;
+            border-radius: 2px;
+            border: 1px solid #374151;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #e5e7eb;
+            margin-bottom: 4px;
+        }
+
+        .card-description {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 6px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #9fd700;
+            color: #111827;
+            padding: 2px 4px;
+            font-size: 10px;
+            border-radius: 1px;
+            margin-right: 4px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 3px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 4px 6px;
+            background: #374151;
+            color: #e5e7eb;
+            border: 1px solid #4b5563;
+            font-size: 12px;
+            border-radius: 2px;
+        }
+
+        .form-container {
+            background: #111827;
+            padding: 20px;
+            border-radius: 4px;
+            max-width: 400px;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .grid-item {
+            background: #111827;
+            padding: 12px;
+            border-radius: 2px;
+            border: 1px solid #374151;
+        }
+
+        .grid-item-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .grid-item-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #e5e7eb;
+            margin-bottom: 3px;
+        }
+
+        .grid-item-text {
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pricing-card {
+            background: #111827;
+            padding: 12px;
+            border-radius: 2px;
+            border: 1px solid #374151;
+            text-align: center;
+        }
+
+        .pricing-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #e5e7eb;
+            margin-bottom: 4px;
+        }
+
+        .pricing-value {
+            font-size: 18px;
+            color: #9fd700;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .pricing-feature {
+            font-size: 10px;
+            color: #9ca3af;
+            margin-bottom: 2px;
+        }
+
+        /* Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-card {
+            background: #111827;
+            padding: 12px;
+            border-radius: 2px;
+            border: 1px solid #374151;
+            text-align: center;
+        }
+
+        .dashboard-card-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-card-label {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+
+        .dashboard-card-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #9fd700;
+        }
+
+        .table {
+            width: 100%;
+            background: #111827;
+            border-collapse: collapse;
+            border: 1px solid #374151;
+            border-radius: 2px;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .table th {
+            background: #374151;
+            padding: 6px;
+            text-align: left;
+            color: #e5e7eb;
+            font-weight: bold;
+        }
+
+        .table td {
+            padding: 6px;
+            border-top: 1px solid #374151;
+            color: #9ca3af;
+        }
+
+        .table tr:hover {
+            background: #1F2937;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: #e5e7eb;
+            margin-bottom: 12px;
+        }
+
+        /* Footer */
+        footer {
+            background: #111827;
+            padding: 12px;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            border-top: 1px solid #374151;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .features, .grid, .pricing-grid, .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="warning-banner">⚠️ VERSÃO ATUAL - Com problemas identificados na auditoria</div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-logo">🎯 Radar Voz</div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a class="nav-link active" onclick="showPage('landing')">Landing</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="showPage('login')">Login</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="showPage('dashboard')">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="showPage('talentos')">Talentos</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="showPage('vagas')">Vagas</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="showPage('pricing')">Pricing</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Landing Page -->
+            <div id="landing" class="page active">
+                <div class="landing-hero">
+                    <h1>Radar da Voz 🎯</h1>
+                    <p>Plataforma de gestão de riscos psicossociais e engajamento</p>
+                    <button class="btn">Começar Agora</button>
+                </div>
+
+                <h2>Recursos Principais</h2>
+                <div class="features">
+                    <div class="feature-box">
+                        <h3>👤 Gerenciar Talentos</h3>
+                        <p>Acompanhe perfis e desenvolvimento</p>
+                    </div>
+                    <div class="feature-box">
+                        <h3>💼 Publicar Vagas</h3>
+                        <p>Encontre os melhores candidatos</p>
+                    </div>
+                    <div class="feature-box">
+                        <h3>📊 Análise de Riscos</h3>
+                        <p>Dados em tempo real</p>
+                    </div>
+                </div>
+
+                <h2>Por Que Radar da Voz?</h2>
+                <div class="grid">
+                    <div class="grid-item">
+                        <div class="grid-item-icon">🔒</div>
+                        <div class="grid-item-title">Seguro</div>
+                        <div class="grid-item-text">Dados protegidos</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="grid-item-icon">⚡</div>
+                        <div class="grid-item-title">Rápido</div>
+                        <div class="grid-item-text">Implementação ágil</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="grid-item-icon">📈</div>
+                        <div class="grid-item-title">Efetivo</div>
+                        <div class="grid-item-text">Resultados comprovados</div>
+                    </div>
+                </div>
+
+                <footer>© 2026 Radar da Voz. Todos os direitos reservados.</footer>
+            </div>
+
+            <!-- Login Page -->
+            <div id="login" class="page">
+                <h2>Entrar 🔑</h2>
+                <div class="form-container">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="seu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-input" placeholder="••••••••">
+                    </div>
+                    <button class="btn" style="width: 100%; margin-top: 8px;">Entrar</button>
+                    <p style="font-size: 11px; color: #9ca3af; margin-top: 8px;">
+                        Não tem conta? <a href="#" style="color: #9fd700; text-decoration: none;">Cadastre-se</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page">
+                <h2>Dashboard 📊</h2>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">👥</div>
+                        <div class="dashboard-card-label">Total de Usuários</div>
+                        <div class="dashboard-card-value">1,234</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">💼</div>
+                        <div class="dashboard-card-label">Vagas Abertas</div>
+                        <div class="dashboard-card-value">42</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">📊</div>
+                        <div class="dashboard-card-label">Taxa de Engajamento</div>
+                        <div class="dashboard-card-value">78%</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">⚠️</div>
+                        <div class="dashboard-card-label">Riscos Identificados</div>
+                        <div class="dashboard-card-value">12</div>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 14px; margin-bottom: 10px;">Atividade Recente</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Ação</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>João Silva</td>
+                            <td>Candidato em vaga</td>
+                            <td>Hoje</td>
+                            <td><span class="badge">Novo</span></td>
+                        </tr>
+                        <tr>
+                            <td>Maria Santos</td>
+                            <td>Preencheu questionário</td>
+                            <td>Ontem</td>
+                            <td><span class="badge">Completo</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pedro Costa</td>
+                            <td>Feedback enviado</td>
+                            <td>2 dias</td>
+                            <td><span class="badge">Enviado</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Talentos Page -->
+            <div id="talentos" class="page">
+                <h2>Talentos 👥</h2>
+
+                <div class="card">
+                    <div class="card-title">🎯 João Silva</div>
+                    <div class="card-description">Desenvolvedor Full Stack | São Paulo</div>
+                    <span class="badge">Ativo</span>
+                    <span class="badge">Programação</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">💼 Maria Santos</div>
+                    <div class="card-description">Gerente de Projetos | Rio de Janeiro</div>
+                    <span class="badge">Ativo</span>
+                    <span class="badge">Gestão</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📱 Pedro Costa</div>
+                    <div class="card-description">Designer UX/UI | Brasília</div>
+                    <span class="badge">Ativo</span>
+                    <span class="badge">Design</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🔧 Ana Oliveira</div>
+                    <div class="card-description">Engenheira DevOps | Curitiba</div>
+                    <span class="badge">Inativo</span>
+                    <span class="badge">Infrastructure</span>
+                </div>
+            </div>
+
+            <!-- Vagas Page -->
+            <div id="vagas" class="page">
+                <h2>Vagas 💼</h2>
+
+                <div class="card">
+                    <div class="card-title">Desenvolvedor Python Senior</div>
+                    <div class="card-description">São Paulo | Tempo integral | R$ 12k-15k</div>
+                    <button class="btn" style="margin-right: 4px;">Ver Detalhes</button>
+                    <button class="btn" style="background: #374151; color: #9ca3af;">Candidatos (8)</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Analista de RH</div>
+                    <div class="card-description">Rio de Janeiro | Tempo integral | R$ 6k-8k</div>
+                    <button class="btn" style="margin-right: 4px;">Ver Detalhes</button>
+                    <button class="btn" style="background: #374151; color: #9ca3af;">Candidatos (15)</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Designer Gráfico</div>
+                    <div class="card-description">Remoto | PJ | R$ 4k-6k</div>
+                    <button class="btn" style="margin-right: 4px;">Ver Detalhes</button>
+                    <button class="btn" style="background: #374151; color: #9ca3af;">Candidatos (23)</button>
+                </div>
+            </div>
+
+            <!-- Pricing Page -->
+            <div id="pricing" class="page">
+                <h2>Planos de Preço 💰</h2>
+                <p style="color: #9ca3af; font-size: 12px; margin-bottom: 16px;">Escolha o plano ideal para sua empresa</p>
+
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="pricing-title">Starter</div>
+                        <div class="pricing-value">R$ 99</div>
+                        <div class="pricing-feature">por mês</div>
+                        <div style="margin: 8px 0; border-top: 1px solid #374151; border-bottom: 1px solid #374151; padding: 6px 0;">
+                            <div class="pricing-feature">✓ Até 50 usuários</div>
+                            <div class="pricing-feature">✓ Relatórios básicos</div>
+                            <div class="pricing-feature">✓ Suporte por email</div>
+                        </div>
+                        <button class="btn" style="width: 100%; margin-top: 8px;">Começar</button>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-title">Professional</div>
+                        <div class="pricing-value">R$ 299</div>
+                        <div class="pricing-feature">por mês</div>
+                        <div style="margin: 8px 0; border-top: 1px solid #374151; border-bottom: 1px solid #374151; padding: 6px 0;">
+                            <div class="pricing-feature">✓ Até 500 usuários</div>
+                            <div class="pricing-feature">✓ Relatórios avançados</div>
+                            <div class="pricing-feature">✓ Suporte prioritário</div>
+                        </div>
+                        <button class="btn" style="width: 100%; margin-top: 8px;">Começar</button>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-title">Enterprise</div>
+                        <div class="pricing-value">Customizado</div>
+                        <div class="pricing-feature">Consulte-nos</div>
+                        <div style="margin: 8px 0; border-top: 1px solid #374151; border-bottom: 1px solid #374151; padding: 6px 0;">
+                            <div class="pricing-feature">✓ Usuários ilimitados</div>
+                            <div class="pricing-feature">✓ API completa</div>
+                            <div class="pricing-feature">✓ Suporte 24/7</div>
+                        </div>
+                        <button class="btn" style="width: 100%; margin-top: 8px;">Falar com Time</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Remove active class from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+
+            // Add active class to clicked nav link
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

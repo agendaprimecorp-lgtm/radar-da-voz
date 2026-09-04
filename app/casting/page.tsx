@@ -122,7 +122,7 @@ export default function CastingComparadorPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Select
               value={filters.specialty}
-              onChange={(value) => setFilters((prev) => ({ ...prev, specialty: value }))}
+              onChange={(e) => setFilters((prev) => ({ ...prev, specialty: e.target.value }))}
             >
               <option value="">Todas as especialidades</option>
               <option value="singing">Canto</option>

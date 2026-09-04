@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       recentEvents: events,
       eventDistribution: eventTypes,
       activeUsersToday,
-      conversionRate: parseFloat(conversionRate),
+      conversionRate: typeof conversionRate === 'string' ? parseFloat(conversionRate) : conversionRate,
       timestamp: new Date().toISOString(),
     })
   } catch (error: any) {

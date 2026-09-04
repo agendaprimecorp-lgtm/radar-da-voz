@@ -182,7 +182,7 @@ export async function compareMultipleTalents(
 
     talents.push({
       id: talent.user_id,
-      name: talent.users?.full_name || 'Desconhecido',
+      name: talent.users?.[0]?.full_name || 'Desconhecido',
       specialty: talent.specialty,
       rating: talent.rating || 0,
       city: talent.city,
